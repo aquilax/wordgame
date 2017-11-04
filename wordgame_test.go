@@ -24,3 +24,23 @@ func TestSearchString(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkSearchString(b *testing.B) {
+	words := []string{
+		"zero",
+		"one",
+		"two",
+		"three",
+		"four",
+		"five",
+		"six",
+		"seven",
+		"eight",
+		"nine",
+	}
+	len := len(words)
+	wl := NewFromStrings(words)
+	for n := 0; n < b.N; n++ {
+		wl.SearchString(words[n%len])
+	}
+}
