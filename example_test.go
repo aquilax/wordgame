@@ -17,3 +17,17 @@ func ExampleWordList_SearchString() {
 	fmt.Printf("%+v", result)
 	// Output: [cow brocolly]
 }
+
+func ExampleWordList_SearchStringLen() {
+	wl := wordgame.NewFromStrings([]string{
+		"cow",
+		"chicken",
+		"horse",
+		"brocolly",
+		"coworker",
+		"comb",
+	})
+	result := wl.SearchStringLen("co", 4)
+	fmt.Printf("%+v", result)
+	// Output: [comb]
+}

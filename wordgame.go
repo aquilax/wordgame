@@ -35,14 +35,24 @@ func NewFromStrings(sl []string) *WordList {
 
 // SearchString searches for matches by stirng of characters
 func (wl WordList) SearchString(s string) []string {
-	return wl.Search([]rune(s))
+	return wl.Search([]rune(s), 0)
 }
 
-// Search searches for matches by array of runes
-func (wl WordList) Search(ar []rune) []string {
+// SearchStringLen searches matches by stirng of characters with
+// fixed length results
+func (wl WordList) SearchStringLen(s string, len int) []string {
+	return wl.Search([]rune(s), len)
+}
+
+// Search searches for matches by array of runes limiting words to lenght if l
+// is greater than 0
+func (wl WordList) Search(ar []rune, l int) []string {
 	result := make([]string, 0)
 	sm := newSearchMap(ar)
 	for _, w := range wl {
+		if l > 0 && l != len(w) {
+			continue
+		}
 		if IsValid(sm, w) {
 			result = append(result, string(w))
 		}
