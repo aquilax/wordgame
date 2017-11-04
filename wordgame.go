@@ -19,9 +19,6 @@ func newSearchMap(ar []rune) searchMap {
 // WordList holds the dictionary
 type WordList [][]rune
 
-// Matches holds the result of the search
-type Matches []string
-
 // New creates new empty dictionary
 func New() *WordList {
 	return &WordList{}
@@ -37,13 +34,13 @@ func NewFromStrings(sl []string) *WordList {
 }
 
 // SearchString searches for matches by stirng of characters
-func (wl WordList) SearchString(s string) Matches {
+func (wl WordList) SearchString(s string) []string {
 	return wl.Search([]rune(s))
 }
 
 // Search searches for matches by array of runes
-func (wl WordList) Search(ar []rune) Matches {
-	result := make(Matches, 0)
+func (wl WordList) Search(ar []rune) []string {
+	result := make([]string, 0)
 	sm := newSearchMap(ar)
 	for _, w := range wl {
 		if IsValid(sm, w) {

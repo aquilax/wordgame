@@ -9,12 +9,12 @@ func TestSearchString(t *testing.T) {
 	testCases := []struct {
 		words    []string
 		chars    string
-		expected Matches
+		expected []string
 	}{
-		{[]string{"abc", "cdb", "rrr"}, "cb", Matches{"abc", "cdb"}},
-		{[]string{}, "", Matches{}},
-		{[]string{"abcdefgh"}, "r", Matches{}},
-		{[]string{"aabbcc", "acb"}, "aacb", Matches{"aabbcc"}},
+		{[]string{"abc", "cdb", "rrr"}, "cb", []string{"abc", "cdb"}},
+		{[]string{}, "", []string{}},
+		{[]string{"abcdefgh"}, "r", []string{}},
+		{[]string{"aabbcc", "acb"}, "aacb", []string{"aabbcc"}},
 	}
 	for _, tc := range testCases {
 		wl := NewFromStrings(tc.words)
