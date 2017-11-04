@@ -6,7 +6,7 @@ import (
 	"github.com/aquilax/wordgame"
 )
 
-func ExampleSearchString() {
+func ExampleWordList_SearchString() {
 	wl := wordgame.NewFromStrings([]string{
 		"cow",
 		"chicken",
