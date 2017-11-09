@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestFilter(t *testing.T) {
+func TestGivenWithExtra(t *testing.T) {
 	testCases := []struct {
 		words    []string
 		l        int
@@ -25,6 +25,32 @@ func TestFilter(t *testing.T) {
 	for _, tc := range testCases {
 		wl := NewFromStrings(tc.words)
 		result := wl.Filter(GivenWithExtra(tc.chars, tc.l))
+		if !reflect.DeepEqual(tc.expected, result) {
+			t.Errorf("Expected %+v, got %+v", tc.expected, result)
+		}
+	}
+}
+
+func TestOnlyGiven(t *testing.T) {
+	testCases := []struct {
+		words    []string
+		l        int
+		chars    string
+		expected []string
+	}{
+		{[]string{"abc", "cdb", "rrr", "c", "bc"}, 0, "cb", []string{"c", "bc"}},
+		{[]string{}, 0, "", []string{}},
+		{[]string{"abcdefgh"}, 0, "r", []string{}},
+		{[]string{"aabbcc", "acb"}, 0, "aacb", []string{"aabbcc", "acb"}},
+
+		{[]string{"abc", "cdb", "rrr"}, 3, "cb", []string{}},
+		{[]string{}, 2, "", []string{}},
+		{[]string{"abcdefgh"}, 2, "r", []string{}},
+		{[]string{"aabbcc", "acb"}, 6, "aacb", []string{"aabbcc"}},
+	}
+	for _, tc := range testCases {
+		wl := NewFromStrings(tc.words)
+		result := wl.Filter(OnlyGiven(tc.chars, tc.l))
 		if !reflect.DeepEqual(tc.expected, result) {
 			t.Errorf("Expected %+v, got %+v", tc.expected, result)
 		}

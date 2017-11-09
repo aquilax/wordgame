@@ -3,7 +3,7 @@
 // list of matching words which include all the required characters.
 package wordgame
 
-// FilterFunc function
+// FilterFunc filtering function
 type FilterFunc func([]rune) bool
 
 type searchMap map[rune]int
@@ -17,6 +17,14 @@ func newSearchMap(ar []rune) searchMap {
 		sm[r] = sm[r] + 1
 	}
 	return sm
+}
+
+func (sm searchMap) copy() searchMap {
+	newMap := make(searchMap)
+	for k, v := range sm {
+		newMap[k] = v
+	}
+	return newMap
 }
 
 // WordList holds the dictionary
@@ -48,7 +56,7 @@ func (wl WordList) Filter(ff FilterFunc) []string {
 	return result
 }
 
-// GivenWithExtra returns function which matches all given characters plus any
+// GivenWithExtra returns function matching all given characters plus any
 // other character
 func GivenWithExtra(letters string, l int) FilterFunc {
 	sm := newSearchMap([]rune(letters))
@@ -64,6 +72,27 @@ func GivenWithExtra(letters string, l int) FilterFunc {
 				}
 			}
 			if found < c {
+				return false
+			}
+		}
+		return true
+	}
+}
+
+// OnlyGiven returns function matching only the given characters
+func OnlyGiven(letters string, l int) FilterFunc {
+	sm := newSearchMap([]rune(letters))
+	return func(w []rune) bool {
+		if l > 0 && l != len(w) {
+			return false
+		}
+		for _, r := range w {
+			smap := sm.copy()
+			if _, ok := smap[r]; !ok {
+				return false
+			}
+			smap[r] = smap[r] - 1
+			if smap[r] < 0 {
 				return false
 			}
 		}
