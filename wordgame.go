@@ -3,6 +3,9 @@
 // list of matching words which include all the required characters.
 package wordgame
 
+// FilterFunc function
+type FilterFunc func([]rune) bool
+
 type searchMap map[rune]int
 
 func newSearchMap(ar []rune) searchMap {
@@ -33,45 +36,37 @@ func NewFromStrings(sl []string) *WordList {
 	return &wl
 }
 
-// SearchString searches for matches by stirng of characters
-func (wl WordList) SearchString(s string) []string {
-	return wl.Search([]rune(s), 0)
-}
-
-// SearchStringLen searches matches by stirng of characters with
-// fixed length results
-func (wl WordList) SearchStringLen(s string, len int) []string {
-	return wl.Search([]rune(s), len)
-}
-
 // Search searches for matches by array of runes limiting words to lenght if l
 // is greater than 0
-func (wl WordList) Search(ar []rune, l int) []string {
+func (wl WordList) Filter(ff FilterFunc) []string {
 	result := make([]string, 0)
-	sm := newSearchMap(ar)
 	for _, w := range wl {
-		if l > 0 && l != len(w) {
-			continue
-		}
-		if IsValid(sm, w) {
+		if ff(w) {
 			result = append(result, string(w))
 		}
 	}
 	return result
 }
 
-// IsValid returns true if the characters are contained in the word
-func IsValid(sm searchMap, word []rune) bool {
-	for sr, c := range sm {
-		found := 0
-		for _, r := range word {
-			if r == sr {
-				found++
-			}
-		}
-		if found < c {
+// GivenWithExtra returns function which matches all given characters plus any
+// other character
+func GivenWithExtra(letters string, l int) FilterFunc {
+	sm := newSearchMap([]rune(letters))
+	return func(w []rune) bool {
+		if l > 0 && l != len(w) {
 			return false
 		}
+		for sr, c := range sm {
+			found := 0
+			for _, r := range w {
+				if r == sr {
+					found++
+				}
+			}
+			if found < c {
+				return false
+			}
+		}
+		return true
 	}
-	return true
 }

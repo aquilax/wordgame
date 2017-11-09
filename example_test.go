@@ -6,19 +6,19 @@ import (
 	"github.com/aquilax/wordgame"
 )
 
-func ExampleWordList_SearchString() {
+func ExampleWordList_Filter() {
 	wl := wordgame.NewFromStrings([]string{
 		"cow",
 		"chicken",
 		"horse",
 		"brocolly",
 	})
-	result := wl.SearchString("co")
+	result := wl.Filter(wl.GivenWithExtra("co", 0))
 	fmt.Printf("%+v", result)
 	// Output: [cow brocolly]
 }
 
-func ExampleWordList_SearchStringLen() {
+func ExampleWordList_FilterLen() {
 	wl := wordgame.NewFromStrings([]string{
 		"cow",
 		"chicken",
@@ -27,7 +27,7 @@ func ExampleWordList_SearchStringLen() {
 		"coworker",
 		"comb",
 	})
-	result := wl.SearchStringLen("co", 4)
+	result := wl.Filter(GivenWithExtra("co", 4))
 	fmt.Printf("%+v", result)
 	// Output: [comb]
 }
