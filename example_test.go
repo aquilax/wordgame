@@ -13,7 +13,7 @@ func ExampleWordList_Filter() {
 		"horse",
 		"brocolly",
 	})
-	result := wl.Filter(wl.GivenWithExtra("co", 0))
+	result := wl.Filter(wordgame.GivenWithExtra("co", 0))
 	fmt.Printf("%+v", result)
 	// Output: [cow brocolly]
 }
@@ -27,7 +27,7 @@ func ExampleWordList_FilterLen() {
 		"coworker",
 		"comb",
 	})
-	result := wl.Filter(GivenWithExtra("co", 4))
+	result := wl.Filter(wordgame.GivenWithExtra("co", 4))
 	fmt.Printf("%+v", result)
 	// Output: [comb]
 }
