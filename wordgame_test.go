@@ -41,12 +41,12 @@ func TestOnlyGiven(t *testing.T) {
 		{[]string{"abc", "cdb", "rrr", "c", "bc"}, 0, "cb", []string{"c", "bc"}},
 		{[]string{}, 0, "", []string{}},
 		{[]string{"abcdefgh"}, 0, "r", []string{}},
-		{[]string{"aabbcc", "acb"}, 0, "aacb", []string{"aabbcc", "acb"}},
+		{[]string{"aabbcc", "acb"}, 0, "aacb", []string{"acb"}},
 
 		{[]string{"abc", "cdb", "rrr"}, 3, "cb", []string{}},
 		{[]string{}, 2, "", []string{}},
 		{[]string{"abcdefgh"}, 2, "r", []string{}},
-		{[]string{"aabbcc", "acb"}, 6, "aacb", []string{"aabbcc"}},
+		{[]string{"aabbcc", "acb", "ac"}, 3, "aacb", []string{"acb"}},
 	}
 	for _, tc := range testCases {
 		wl := NewFromStrings(tc.words)

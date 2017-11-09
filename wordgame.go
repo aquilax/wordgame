@@ -86,8 +86,8 @@ func OnlyGiven(letters string, l int) FilterFunc {
 		if l > 0 && l != len(w) {
 			return false
 		}
+		smap := sm.copy()
 		for _, r := range w {
-			smap := sm.copy()
 			if _, ok := smap[r]; !ok {
 				return false
 			}
