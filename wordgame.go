@@ -3,6 +3,8 @@
 // list of matching words which include all the required characters.
 package wordgame
 
+import "sync"
+
 // FilterFunc filtering function
 type FilterFunc func([]rune) bool
 
@@ -44,8 +46,7 @@ func NewFromStrings(sl []string) *WordList {
 	return &wl
 }
 
-// Search searches for matches by array of runes limiting words to lenght if l
-// is greater than 0
+// Filter searches for matches by applying the filter function
 func (wl WordList) Filter(ff FilterFunc) []string {
 	result := make([]string, 0)
 	for _, w := range wl {
@@ -53,6 +54,47 @@ func (wl WordList) Filter(ff FilterFunc) []string {
 			result = append(result, string(w))
 		}
 	}
+	return result
+}
+
+// FilterConcurrent searches for matches by applying the filter function using
+// pool of workers
+func (wl WordList) FilterConcurrent(ff FilterFunc, numWorkers int) []string {
+	result := make([]string, 0)
+	in := make(chan []rune)
+	out := make(chan []rune)
+
+	var w sync.WaitGroup
+	var w2 sync.WaitGroup
+
+	for n := 0; n < numWorkers; n++ {
+		w.Add(1)
+		go func() {
+			for wrd := range in {
+				if ff(wrd) {
+					out <- wrd
+				}
+			}
+			w.Done()
+		}()
+	}
+
+	for _, wrd := range wl {
+		in <- wrd
+	}
+
+	w2.Add(1)
+	go func() {
+		for wrd := range out {
+			result = append(result, string(wrd))
+		}
+		w2.Done()
+	}()
+
+	close(in)
+	w.Wait()
+	close(out)
+	w2.Wait()
 	return result
 }
 
