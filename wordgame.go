@@ -12,8 +12,10 @@ type searchMap map[rune]int
 
 func newSearchMap(ar []rune) searchMap {
 	sm := make(searchMap)
-	for _, r := range ar {
-		if _, ok := sm[r]; !ok {
+	var r rune
+	var ok bool
+	for _, r = range ar {
+		if _, ok = sm[r]; !ok {
 			sm[r] = 0
 		}
 		sm[r] = sm[r] + 1
@@ -22,7 +24,7 @@ func newSearchMap(ar []rune) searchMap {
 }
 
 func (sm searchMap) copy() searchMap {
-	newMap := make(searchMap)
+	newMap := make(searchMap, len(sm))
 	for k, v := range sm {
 		newMap[k] = v
 	}
@@ -39,9 +41,11 @@ func New() *WordList {
 
 // NewFromStrings creates new dictionary and populates it with words
 func NewFromStrings(sl []string) *WordList {
-	var wl WordList
-	for _, w := range sl {
-		wl = append(wl, []rune(w))
+	wl := make(WordList, len(sl))
+	var i int
+	var w string
+	for i, w = range sl {
+		wl[i] = []rune(w)
 	}
 	return &wl
 }
@@ -49,7 +53,8 @@ func NewFromStrings(sl []string) *WordList {
 // Filter searches for matches by applying the filter function
 func (wl WordList) Filter(ff FilterFunc) []string {
 	result := make([]string, 0)
-	for _, w := range wl {
+	var w []rune
+	for _, w = range wl {
 		if ff(w) {
 			result = append(result, string(w))
 		}
@@ -70,7 +75,8 @@ func (wl WordList) FilterConcurrent(ff FilterFunc, numWorkers int) []string {
 	for n := 0; n < numWorkers; n++ {
 		w.Add(1)
 		go func() {
-			for wrd := range in {
+			var wrd []rune
+			for wrd = range in {
 				if ff(wrd) {
 					out <- wrd
 				}
@@ -79,13 +85,15 @@ func (wl WordList) FilterConcurrent(ff FilterFunc, numWorkers int) []string {
 		}()
 	}
 
-	for _, wrd := range wl {
+	var wrd []rune
+	for _, wrd = range wl {
 		in <- wrd
 	}
 
 	w2.Add(1)
 	go func() {
-		for wrd := range out {
+		var wrd []rune
+		for wrd = range out {
 			result = append(result, string(wrd))
 		}
 		w2.Done()
@@ -106,9 +114,13 @@ func GivenWithExtra(letters string, l int) FilterFunc {
 		if l > 0 && l != len(w) {
 			return false
 		}
-		for sr, c := range sm {
-			found := 0
-			for _, r := range w {
+		var found int
+		var c int
+		var r rune
+		var sr rune
+		for sr, c = range sm {
+			found = 0
+			for _, r = range w {
 				if r == sr {
 					found++
 				}
@@ -128,13 +140,15 @@ func OnlyGiven(letters string, l int) FilterFunc {
 		if l > 0 && l != len(w) {
 			return false
 		}
-		smap := sm.copy()
-		for _, r := range w {
-			if _, ok := smap[r]; !ok {
+		var r rune
+		var ok bool
+		smCopy := sm.copy()
+		for _, r = range w {
+			if _, ok = smCopy[r]; !ok {
 				return false
 			}
-			smap[r] = smap[r] - 1
-			if smap[r] < 0 {
+			smCopy[r] = smCopy[r] - 1
+			if smCopy[r] < 0 {
 				return false
 			}
 		}
