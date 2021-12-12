@@ -1,4 +1,4 @@
-# wordgame [![Build Status](https://travis-ci.org/aquilax/wordgame.svg?branch=master)](https://travis-ci.org/aquilax/wordgame) [![GoDoc](https://godoc.org/github.com/aquilax/wordgame?status.svg)](https://godoc.org/github.com/aquilax/wordgame)
+# wordgame [![GoDoc](https://godoc.org/github.com/aquilax/wordgame?status.svg)](https://godoc.org/github.com/aquilax/wordgame)
 
 Package wordgame provides a dictionary search for word games.
 
